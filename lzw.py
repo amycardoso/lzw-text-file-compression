@@ -22,7 +22,7 @@ def comprimir(entrada):
         else:
             resultado.append(dicionario[temp])
             
-            dicionario[temp] = tamanhoDicionario
+            dicionario[temp2] = tamanhoDicionario
             tamanhoDicionario+=1
             temp = ""+str(chr(c))
 
@@ -36,15 +36,16 @@ def descompressao(entrada):
     tamanhoDicionario = 256
     dicionario = {}
 
+    resultado = []
+
     for i in range(0, tamanhoDicionario):
         dicionario[str(chr(i))] = i
     
-    for c in entrada:
+    for bit in entrada:
+        if bit in dicionario.keys():
+            resultado.append(dicionario[bit])
+        
 
-
-
-
-    resultado = ""
 
     return resultado
 
