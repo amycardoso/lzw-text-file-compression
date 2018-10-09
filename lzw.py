@@ -41,15 +41,26 @@ def descompressao(entrada):
     for i in range(0, tamanhoDicionario):
         dicionario[str(chr(i))] = i
     
+    anterior = ""
     for bit in entrada:
         if bit in dicionario.keys():
             resultado.append(dicionario[bit])
-        
-
+            aux = anterior + bit
+            anterior = bit
+            if anterior not in dicionario.keys():
+                dicionario[aux] = tamanhoDicionario
+                tamanhoDicionario+=1
+                aux = ""
+            else:
+                anterior = aux
+                aux = ""
+        else:
+            dicionario[tamanhoDicionario] = resultado[-1]+ resultado[-1][0]
+            tamanhoDicionario+=1
+            resultado.append(dicionario[bit])
+            anterior = bit
 
     return resultado
-
-
 
 #Instância do objeto ArgumentParser, que será o responsável por fazer a análise dos argumentos fornecidos pela linha de comando.
 parser = argparse.ArgumentParser(description = 'Compressor e descompressor de texto.')
@@ -76,6 +87,11 @@ else:
     entrada = pickle.load(open(ABSOLUTE_PATH+"//"+arguments.input, "rb"))
     saida = open(ABSOLUTE_PATH+"//"+arguments.output, "w")
     
+    descomprimido = descompressao(entrada)
+    for l in descomprimido:
+            saida.write(l)
+    saida.close()
+
 
 
 
