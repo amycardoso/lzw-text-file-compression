@@ -4,29 +4,26 @@ import pickle
 
 def comprimir(entrada):
     tamanhoDicionario = 256
-    dicionario = {}
+    dicionario = {} #armazena o dicionário
 
     #Adicionando tabela ASCII ao dicionário
     for i in range(0, tamanhoDicionario):
         dicionario[str(chr(i))] = i
     
     temp = ""
-    
-    #Irá armazenar a codificação
-    resultado = []
-    #Percorre a string
-    for c in entrada:
-        temp2 = temp+str(chr(c))
-        if temp2 in dicionario.keys():
+    resultado = [] #armazena o resultado comprimido
+
+    for c in entrada: #Percorre a string
+        temp2 = temp+str(chr(c)) #temp2 recebe o caractere atual mais o anterior para verificar se existe no dicionário
+        if temp2 in dicionario.keys(): #se estiver no dicionário temp = temp2 para ser concatenado posteriormente com o próximo caracterce
             temp = temp2
         else:
-            resultado.append(dicionario[temp])
-            
-            dicionario[temp2] = tamanhoDicionario
+            resultado.append(dicionario[temp]) # se não, adiciona ao resultado da compressão e
+            dicionario[temp2] = tamanhoDicionario #adiciona a string ao dicionário
             tamanhoDicionario+=1
-            temp = ""+str(chr(c))
+            temp = ""+str(chr(c)) #reseta a string temporária com o caractere atual
 
-    if temp != "":
+    if temp != "": #caso a string temporária não esteja vazia, deve-se adicionar ao resultado
         resultado.append(dicionario[temp])    
     
 
@@ -34,32 +31,31 @@ def comprimir(entrada):
 
 def descompressao(entrada):
     tamanhoDicionario = 256
-    dicionario = {}
+    dicionario = {} #armazena o dicionário
+    resultado = [] #armazena o resultado descomprimido
 
-    resultado = []
-
+    #inicializando dicionário com tabela ASCII
     for i in range(0, tamanhoDicionario):
-        dicionario[str(chr(i))] = i
-    
-    anterior = ""
-    for bit in entrada:
-        if bit in dicionario.keys():
-            resultado.append(dicionario[bit])
-            aux = anterior + bit
-            anterior = bit
-            if anterior not in dicionario.keys():
-                dicionario[aux] = tamanhoDicionario
-                tamanhoDicionario+=1
-                aux = ""
-            else:
-                anterior = aux
-                aux = ""
-        else:
-            dicionario[tamanhoDicionario] = resultado[-1]+ resultado[-1][0]
-            tamanhoDicionario+=1
-            resultado.append(dicionario[bit])
-            anterior = bit
+        dicionario[i] = str(chr(i))
 
+    anterior = chr(entrada[0]) #pega o primeiro caractere e marca como anterior
+    entrada = entrada[1:] #remove o primeiro caractere da entrada
+    resultado.append(anterior) #adiciona o primeiro caractere ao resultado
+
+    for bit in entrada:
+        aux = ""
+        if bit in dicionario.keys():
+            aux = dicionario[bit] #pega o caractere correspondente ao bit no dicionário
+        elif bit == tamanhoDicionario:
+                aux = anterior+anterior[0] #Quando o bit é igual ao tamanho do dicionário deve-se pegar
+                #o ultimo caractere impresso + a primeira posição do último caractere impresso 
+                #pois devemos decodificar bits que não estão presentes no dicionário
+        else:
+            raise ValueError('Compressão ruim:', bit) #caso tenha ocorrido algum erro na compressão de um bit
+        resultado.append(aux)
+        dicionario[tamanhoDicionario] = anterior + aux[0] #adiciona ao dicionário o caractere anterior mais o atual
+        tamanhoDicionario+= 1
+        anterior = aux #anterior recebe o caractere atual
     return resultado
 
 #Instância do objeto ArgumentParser, que será o responsável por fazer a análise dos argumentos fornecidos pela linha de comando.
@@ -88,16 +84,6 @@ else:
     saida = open(ABSOLUTE_PATH+"//"+arguments.output, "w")
     
     descomprimido = descompressao(entrada)
-    for l in descomprimido:
+    for l in descomprimido: #grava no arquivo o resultado da descompressão
             saida.write(l)
     saida.close()
-
-
-
-
-
-
-
-
-
-
