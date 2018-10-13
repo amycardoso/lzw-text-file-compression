@@ -2,7 +2,8 @@ import argparse
 import os
 import pickle
 
-def comprimir(entrada):
+#função que realiza a compressao da entrada
+def compressao(entrada):
     tamanhoDicionario = 256
     dicionario = {} #armazena o dicionário
 
@@ -29,6 +30,7 @@ def comprimir(entrada):
 
     return resultado
 
+#função que realiza a descompressao da entrada
 def descompressao(entrada):
     tamanhoDicionario = 256
     dicionario = {} #armazena o dicionário
@@ -77,7 +79,7 @@ if arguments.acao == 'encode':
     entrada = open(ABSOLUTE_PATH+"//"+arguments.input, "rb").read()
     saida = open(ABSOLUTE_PATH+"//"+arguments.output, "wb")
 
-    comprimido = comprimir(entrada)
+    comprimido = compressao(entrada)
     pickle.dump(comprimido, saida)
 else:
     entrada = pickle.load(open(ABSOLUTE_PATH+"//"+arguments.input, "rb"))
