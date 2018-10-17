@@ -9,14 +9,14 @@ def compressao(entrada):
 
     #Adicionando tabela ASCII ao dicionário
     for i in range(0, tamanhoDicionario):
-        dicionario[str(chr(i))] = i
+        dicionario[str(chr(i))] = i #Como fica o dicionário {'a': 97, 'b': 98}
     
     temp = ""
     resultado = [] #armazena o resultado comprimido
 
     for c in entrada: #Percorre a string
         temp2 = temp+str(chr(c)) #temp2 recebe o caractere atual mais o anterior para verificar se existe no dicionário
-        if temp2 in dicionario.keys(): #se estiver no dicionário temp = temp2 para ser concatenado posteriormente com o próximo caracterce
+        if temp2 in dicionario.keys(): #se estiver no dicionário temp = temp2 para ser concatenado posteriormente com o próximo caractere
             temp = temp2
         else:
             resultado.append(dicionario[temp]) # se não, adiciona ao resultado da compressão e
@@ -38,9 +38,9 @@ def descompressao(entrada):
 
     #inicializando dicionário com tabela ASCII
     for i in range(0, tamanhoDicionario):
-        dicionario[i] = str(chr(i))
+        dicionario[i] = str(chr(i)) #Como o dicionário fica, ex: {97: 'a', 98: 'b'}
 
-    anterior = chr(entrada[0]) #pega o primeiro caractere e marca como anterior
+    anterior = chr(entrada[0]) #pega o primeiro caractere e marca como anterior, por exemplo: chr(97) retorna a string 'a'
     entrada = entrada[1:] #remove o primeiro caractere da entrada
     resultado.append(anterior) #adiciona o primeiro caractere ao resultado
 
@@ -48,15 +48,20 @@ def descompressao(entrada):
         aux = ""
         if bit in dicionario.keys():
             aux = dicionario[bit] #pega o caractere correspondente ao bit no dicionário
-        elif bit == tamanhoDicionario:
-                aux = anterior+anterior[0] #Quando o bit é igual ao tamanho do dicionário deve-se pegar
-                #o ultimo caractere impresso + a primeira posição do último caractere impresso 
-                #pois devemos decodificar bits que não estão presentes no dicionário
+        elif bit == tamanhoDicionario: #Quando o bit é igual ao tamanho do dicionário deve-se pegar
+                aux = anterior+anterior[0] #o ultimo caractere impresso + a primeira posição do último caractere impresso 
+                #pois devemos decodificar bits que não estão presentes no dicionário, então temos que adivinhar o que ele representa, por exemplo:
+                #digamos que o bit 37768 não ta no dicionário, então pegamos o último caractere impresso, por exemplo foi 'uh'
+                #e pegamos ele 'uh' mais sua primeira posição 'u', resultando em 'uhu', que é a representação do bit 37768
+                #o único caso em que isso pode ocorrer é se a substring começar e terminar com o mesmo caractere ("uhu").
+                #mais informações para esse caso (https://www2.cs.duke.edu/csed/curious/compression/lzw.html)
         else:
             raise ValueError('Compressão ruim:', bit) #caso tenha ocorrido algum erro na compressão de um bit
-        resultado.append(aux)
-        dicionario[tamanhoDicionario] = anterior + aux[0] #adiciona ao dicionário o caractere anterior mais o atual
-        tamanhoDicionario+= 1
+            
+        resultado.append(aux) #adiciona ao resultado
+        #Resimulando como as substrings foram adicionadas durante a compactação
+        dicionario[tamanhoDicionario] = anterior + aux[0] #adiciona ao dicionário o caractere anterior mais a primeira posição do caractere atual
+        tamanhoDicionario+= 1 #incrementa tamanho do dicionário
         anterior = aux #anterior recebe o caractere atual
     return resultado
 
@@ -80,7 +85,7 @@ if arguments.acao == 'encode':
     saida = open(ABSOLUTE_PATH+"//"+arguments.output, "wb")
 
     comprimido = compressao(entrada)
-    pickle.dump(comprimido, saida)
+    pickle.dump(comprimido, saida) #escreve no arquivo binário a compressão
 else:
     entrada = pickle.load(open(ABSOLUTE_PATH+"//"+arguments.input, "rb"))
     saida = open(ABSOLUTE_PATH+"//"+arguments.output, "w")

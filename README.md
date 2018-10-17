@@ -26,3 +26,8 @@ Para descompressão:
 $ python3 decode -i arquivo_binario.bin -o arquivo_descomprimido.txt
 
 ```
+Para ajuda:
+```
+$ python3 lzw.py -h
+
+```
