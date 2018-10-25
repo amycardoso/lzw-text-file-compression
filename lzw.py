@@ -26,8 +26,7 @@ def compressao(entrada):
 
     if temp != "": #caso a string temporária não esteja vazia, deve-se adicionar ao resultado
         resultado.append(dicionario[temp])    
-    
-
+        
     return resultado
 
 #função que realiza a descompressao da entrada
@@ -53,10 +52,8 @@ def descompressao(entrada):
                 #pois devemos decodificar bits que não estão presentes no dicionário, então temos que adivinhar o que ele representa, por exemplo:
                 #digamos que o bit 37768 não ta no dicionário, então pegamos o último caractere impresso, por exemplo foi 'uh'
                 #e pegamos ele 'uh' mais sua primeira posição 'u', resultando em 'uhu', que é a representação do bit 37768
-                #o único caso em que isso pode ocorrer é se a substring começar e terminar com o mesmo caractere ("uhu").
-        else:
-            raise ValueError('Compressão ruim:', bit) #caso tenha ocorrido algum erro na compressão de um bit
-            
+                #o único caso em que isso pode ocorrer é se a substring começar e terminar com o mesmo caractere ("uhuhu").
+                
         resultado.append(aux) #adiciona ao resultado
         #Resimulando como as substrings foram adicionadas durante a compactação
         dicionario[tamanhoDicionario] = anterior + aux[0] #adiciona ao dicionário o caractere anterior mais a primeira posição do caractere atual
