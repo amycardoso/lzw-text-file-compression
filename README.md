@@ -18,12 +18,12 @@ por sua vez, também será operado por linha de comando, aceitando ambos os par�
 Para compressão:
 
 ```
-$ python3 encode -i arquivo_original.txt -o arquivo_binario.bin
+$ python3 lzw.py encode -i arquivo_original.txt -o arquivo_binario.bin
 
 ```
 Para descompressão:
 ```
-$ python3 decode -i arquivo_binario.bin -o arquivo_descomprimido.txt
+$ python3 lzw.py decode -i arquivo_binario.bin -o arquivo_descomprimido.txt
 
 ```
 Para ajuda:
