@@ -47,12 +47,12 @@ def descompressao(entrada):
         aux = ""
         if bit in dicionario.keys():
             aux = dicionario[bit] #pega o caractere correspondente ao bit no dicionário
-        elif bit == tamanhoDicionario: #Quando o bit é igual ao tamanho do dicionário deve-se pegar
-                aux = anterior+anterior[0] #o ultimo caractere impresso + a primeira posição do último caractere impresso 
-                #pois devemos decodificar bits que não estão presentes no dicionário, então temos que adivinhar o que ele representa, por exemplo:
-                #digamos que o bit 37768 não ta no dicionário, então pegamos o último caractere impresso, por exemplo foi 'uh'
-                #e pegamos ele 'uh' mais sua primeira posição 'u', resultando em 'uhu', que é a representação do bit 37768
-                #o único caso em que isso pode ocorrer é se a substring começar e terminar com o mesmo caractere ("uhuhu").
+        else: #Quando o bit não ta no dicionário, deve se pegar
+            aux = anterior+anterior[0] #o ultimo caractere impresso + a primeira posição do último caractere impresso 
+            #pois devemos decodificar bits que não estão presentes no dicionário, então temos que adivinhar o que ele representa, por exemplo:
+            #digamos que o bit 37768 não ta no dicionário, então pegamos o último caractere impresso, por exemplo foi 'uh'
+            #e pegamos ele 'uh' mais sua primeira posição 'u', resultando em 'uhu', que é a representação do bit 37768
+            #o único caso em que isso pode ocorrer é se a substring começar e terminar com o mesmo caractere ("uhuhu").
                 
         resultado.append(aux) #adiciona ao resultado
         #Resimulando como as substrings foram adicionadas durante a compactação
