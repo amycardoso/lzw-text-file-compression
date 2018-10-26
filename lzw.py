@@ -6,26 +6,25 @@ import pickle
 def compressao(entrada):
     tamanhoDicionario = 256
     dicionario = {} #armazena o dicionário
+    resultado = [] #armazena o resultado comprimido
+    temp = "" #variável que irá armazenar as strings
 
     #Adicionando tabela ASCII ao dicionário
     for i in range(0, tamanhoDicionario):
         dicionario[str(chr(i))] = i #Como fica o dicionário {'a': 97, 'b': 98}
-    
-    temp = ""
-    resultado = [] #armazena o resultado comprimido
 
-    for c in entrada: #Percorre a string
+    for c in entrada: #Percorre o arquivo
         temp2 = temp+str(chr(c)) #temp2 recebe o caractere atual mais o anterior para verificar se existe no dicionário
         if temp2 in dicionario.keys(): #se estiver no dicionário temp = temp2 para ser concatenado posteriormente com o próximo caractere
             temp = temp2
-        else:
-            resultado.append(dicionario[temp]) # se não, adiciona ao resultado da compressão e
-            dicionario[temp2] = tamanhoDicionario #adiciona a string ao dicionário
-            tamanhoDicionario+=1
+        else: #caso o conteúdo de temp2 não esteja no dicionário
+            resultado.append(dicionario[temp]) #pegamos o inteiro que representa a string anterior no dicionário e adicionamos ao resultado
+            dicionario[temp2] = tamanhoDicionario #em seguida adicionamos temp2 ao dicionário
+            tamanhoDicionario+=1 #incrementa tamanho do dicionário
             temp = ""+str(chr(c)) #reseta a string temporária com o caractere atual
 
     if temp != "": #caso a string temporária não esteja vazia, deve-se adicionar ao resultado
-        resultado.append(dicionario[temp])    
+        resultado.append(dicionario[temp]) #pegando o inteiro que a representa no dicionário    
         
     return resultado
 
@@ -82,6 +81,7 @@ if arguments.acao == 'encode':
 
     comprimido = compressao(entrada)
     pickle.dump(comprimido, saida) #escreve no arquivo binário a compressão
+    #dump salva o conteúdo serializado do objeto nesse arquivo
 else:
     entrada = pickle.load(open(ABSOLUTE_PATH+"//"+arguments.input, "rb"))
     saida = open(ABSOLUTE_PATH+"//"+arguments.output, "w")
@@ -90,3 +90,4 @@ else:
     for l in descomprimido: #grava no arquivo o resultado da descompressão
             saida.write(l)
     saida.close()
+           
