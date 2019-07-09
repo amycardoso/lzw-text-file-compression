@@ -2,8 +2,7 @@
 
 O objetivo principal deste projeto é colocar em prática conceitos teóricos abordados em sala de aula relacionados a técnicas de codificação de mídias. Para isso, foi desenvolvido um compressor e um descompressor aplicado a texto em geral, utilizando o algoritmo Lempel-Ziv-Welsh (LZW) com tamanho de dicionário fixo.
 
-A entrada dos dados é um documento no formato TXT, cuja saída, o
-codificador gera um arquivo binário contendo os dados comprimidos.
+A entrada dos dados é um documento no formato TXT, cuja saída, é um arquivo binário contendo os dados comprimidos.
 #
 
 ### Requirements
