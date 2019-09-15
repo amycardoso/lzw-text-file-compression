@@ -12,12 +12,12 @@ The compressor operates by command-line, accepting as parameter the name and pat
 For compression:
 
 ```
-$ python3 lzw.py encode -i arquivo_original.txt -o arquivo_binario.bin
+$ python3 lzw.py encode -i original_file.txt -o binary_file.bin
 
 ```
 For decompression:
 ```
-$ python3 lzw.py decode -i arquivo_binario.bin -o arquivo_descomprimido.txt
+$ python3 lzw.py decode -i binary_file.bin -o uncompressed_file.txt
 
 ```
 For help:
