@@ -1,31 +1,26 @@
-# Compressor e Descompressor de Texto LZW
-
-O objetivo principal deste projeto é colocar em prática conceitos teóricos abordados em sala de aula relacionados a técnicas de codificação de mídias. Para isso, foi desenvolvido um compressor e um descompressor aplicado a texto em geral, utilizando o algoritmo Lempel-Ziv-Welsh (LZW) com tamanho de dicionário fixo.
-
-A entrada dos dados é um documento no formato TXT, cuja saída, é um arquivo binário contendo os dados comprimidos.
-#
+# LZW Text Compressor and Decompressor
+The main objective of this project is to put into practice the theoretical concepts approached in the classroom related to media coding techniques. For this, a compressor and a decompressor of text were developed using the Lempel-Ziv-Welsh (LZW) algorithm with fixed dictionary size. 
+Data entry is a TXT document whose output is a binary file containing the compressed data.
 
 ### Requirements
 * Python 3
 
 ### Usage
 
-O compressor opera por linha de comando, aceitando como parâmetro o nome e caminho do arquivo TXT original, e também o nome e caminho do arquivo binário a ser gerado. O descompressor,
-por sua vez, também será operado por linha de comando, aceitando ambos os parâmetros também
-(arquivo binário de entrada e arquivo TXT de saída). O seguinte formato de execução deverá ser obedecido:
+The compressor operates by command-line, accepting as parameter the name and path of the original TXT file, as well as the name and path of the binary file to be generated. The decompressor will also be command-line operated, accepting both parameters as well (binary input file and output TXT file). The following execution format must be obeyed: 
 
-Para compressão:
+For compression:
 
 ```
 $ python3 lzw.py encode -i arquivo_original.txt -o arquivo_binario.bin
 
 ```
-Para descompressão:
+For decompression:
 ```
 $ python3 lzw.py decode -i arquivo_binario.bin -o arquivo_descomprimido.txt
 
 ```
-Para ajuda:
+For help:
 ```
 $ python3 lzw.py -h
 
