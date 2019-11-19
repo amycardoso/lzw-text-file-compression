@@ -1,4 +1,7 @@
 # LZW Text Compressor and Decompressor
+[![GitHub license](https://img.shields.io/github/license/amycardoso/LZW-Text-File-Compression)](https://github.com/amycardoso/LZW-Text-File-Compression/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/amycardoso/LZW-Text-File-Compression)](https://github.com/amycardoso/LZW-Text-File-Compression/stargazers)
+
 The main objective of this project is to put into practice the theoretical concepts approached in the classroom related to media coding techniques. For this, a compressor and a decompressor of text were developed using the Lempel-Ziv-Welch (LZW) algorithm with fixed dictionary size. 
 Data entry is a TXT document whose output is a binary file containing the compressed data.
 
