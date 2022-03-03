@@ -2,93 +2,84 @@ import argparse
 import os
 import pickle
 
-#função que realiza a compressao da entrada
-def compressao(entrada):
-    tamanhoDicionario = 256
-    dicionario = {} #armazena o dicionário
-    resultado = [] #armazena o resultado comprimido
-    temp = "" #variável que irá armazenar as substrings
+DICTIONARY_SIZE = 256
 
-    #Adicionando tabela ASCII ao dicionário
-    for i in range(0, tamanhoDicionario):
-        dicionario[str(chr(i))] = i #Como fica o dicionário {'a': 97, 'b': 98}
-    #assim podemos percorrer o arquivo, e substituir as substrings por seus respectivos inteiros
+def compress(input):
+    global DICTIONARY_SIZE
+    dictionary = {}
+    result = []
+    temp = ""
 
-    for c in entrada: #Percorre o arquivo
-        temp2 = temp+str(chr(c)) #temp2 recebe o caractere atual mais o anterior para verificar se existe no dicionário
-        if temp2 in dicionario.keys(): #se estiver no dicionário temp = temp2 para ser concatenado posteriormente com o próximo caractere
+    for i in range(0, DICTIONARY_SIZE):
+        dictionary[str(chr(i))] = i
+
+    for c in input:
+        temp2 = temp+str(chr(c))
+        if temp2 in dictionary.keys():
             temp = temp2
-        else: #caso o conteúdo de temp2 não esteja no dicionário
-            resultado.append(dicionario[temp]) #pegamos o inteiro que representa a string anterior no dicionário e adicionamos ao resultado
-            dicionario[temp2] = tamanhoDicionario #em seguida adicionamos temp2 ao dicionário
-            tamanhoDicionario+=1 #incrementa tamanho do dicionário
-            temp = ""+str(chr(c)) #reseta a variável com a substring atual
+        else:
+            result.append(dictionary[temp])
+            dictionary[temp2] = DICTIONARY_SIZE
+            DICTIONARY_SIZE+=1
+            temp = ""+str(chr(c))
 
-    if temp != "": #caso a string temporária não esteja vazia, deve-se adicionar ao resultado
-        resultado.append(dicionario[temp]) #pegando o inteiro que a representa no dicionário    
+    if temp != "":
+        result.append(dictionary[temp])  
         
-    return resultado
+    return result
 
-#função que realiza a descompressao da entrada
-def descompressao(entrada):
-    tamanhoDicionario = 256
-    dicionario = {} #armazena o dicionário
-    resultado = [] #armazena o resultado descomprimido
+def decompress(input):
+    global DICTIONARY_SIZE
+    dictionary = {}
+    result = []
 
-    #inicializando dicionário com tabela ASCII
-    for i in range(0, tamanhoDicionario):
-        dicionario[i] = str(chr(i)) #Como o dicionário fica, ex: {97: 'a', 98: 'b'}, diferente do dicionário de compressão
+    for i in range(0, DICTIONARY_SIZE):
+        dictionary[i] = str(chr(i))
 
-    anterior = chr(entrada[0]) #pega o primeiro caractere e marca como anterior, por exemplo: chr(97) retorna a string 'a'
-    entrada = entrada[1:] #remove o primeiro caractere da entrada
-    resultado.append(anterior) #adiciona o primeiro caractere ao resultado
+    previous = chr(input[0])
+    input = input[1:]
+    result.append(previous)
 
-    for bit in entrada:
+    for bit in input:
         aux = ""
-        if bit in dicionario.keys():
-            aux = dicionario[bit] #pega o caractere correspondente ao bit no dicionário
-        else: #Quando o bit não ta no dicionário, deve se pegar
-            aux = anterior+anterior[0] #o ultimo caractere impresso + a primeira posição do último caractere impresso 
-            #pois devemos decodificar bits que não estão presentes no dicionário, então temos que adivinhar o que ele representa, por exemplo:
-            #digamos que o bit 37768 não ta no dicionário, então pegamos o último caractere impresso, por exemplo foi 'uh'
-            #e pegamos ele 'uh' mais sua primeira posição 'u', resultando em 'uhu', que é a representação do bit 37768
-            #o único caso em que isso pode ocorrer é se a substring começar e terminar com o mesmo caractere ("uhuhu").
-                
-        resultado.append(aux) #adiciona ao resultado
-        #Resimulando como as substrings foram adicionadas durante a compressão
-        dicionario[tamanhoDicionario] = anterior + aux[0] #adiciona ao dicionário o caractere anterior mais a primeira posição do caractere atual
-        tamanhoDicionario+= 1 #incrementa tamanho do dicionário
-        anterior = aux #anterior recebe o caractere atual
-    return resultado
+        if bit in dictionary.keys():
+            aux = dictionary[bit]
+        else:
+            aux = previous+previous[0] 
+            #Bit is not in the dictionary
+                 # Get the last character printed + the first position of the last character printed
+                 #because we must decode bits that are not present in the dictionary, so we have to guess what it represents, for example:
+                 #let's say bit 37768 is not in the dictionary, so we get the last character printed, for example it was 'uh'
+                 #and we take it 'uh' plus its first position 'u', resulting in 'uhu', which is the representation of bit 37768
+                 #the only case where this can happen is if the substring starts and ends with the same character ("uhuhu").
+        result.append(aux)
+        dictionary[DICTIONARY_SIZE] = previous + aux[0]
+        DICTIONARY_SIZE+= 1
+        previous = aux
+    return result
 
-#Instância do objeto ArgumentParser, que será o responsável por fazer a análise dos argumentos fornecidos pela linha de comando.
-parser = argparse.ArgumentParser(description = 'Compressor e descompressor de texto.')
-
-#Configuraração do nosso parser, informando a ele quais são os argumentos esperados pelo nosso programa.
-parser.add_argument('acao', choices={"encode", "decode"}, help="Definir ação a ser realizada.")
+parser = argparse.ArgumentParser(description = 'Text compressor and decompressor.')
+parser.add_argument('action', choices={"compress", "decompress"}, help="Define action to be performed.")
 parser.add_argument('-i', action = 'store', dest = 'input', required = True,
-                           help = 'Arquivo de entrada.')
+                           help = 'Input file.')
 parser.add_argument('-o', action = 'store', dest = 'output', required = True,
-                           help = 'Arquivo de saída.')
-#Solicitação ao nosso parser para que faça a verificação dos argumentos.                  
+                           help = 'Output file.')
 arguments = parser.parse_args()
 
-#Pega o caminho absoluto do arquivo
 ABSOLUTE_PATH = os.getcwd()
 
-if arguments.acao == 'encode':
-    entrada = open(ABSOLUTE_PATH+"//"+arguments.input, "rb").read()
-    saida = open(ABSOLUTE_PATH+"//"+arguments.output, "wb")
+if arguments.action == 'compress':
+    input = open(ABSOLUTE_PATH+"//"+arguments.input, "rb").read()
+    output = open(ABSOLUTE_PATH+"//"+arguments.output, "wb")
 
-    comprimido = compressao(entrada)
-    pickle.dump(comprimido, saida) #escreve no arquivo binário a compressão
-    #dump salva o conteúdo serializado do objeto nesse arquivo
+    compressedFile = compress(input)
+    pickle.dump(compressedFile, output)
 else:
-    entrada = pickle.load(open(ABSOLUTE_PATH+"//"+arguments.input, "rb"))
-    saida = open(ABSOLUTE_PATH+"//"+arguments.output, "w")
+    input = pickle.load(open(ABSOLUTE_PATH+"//"+arguments.input, "rb"))
+    output = open(ABSOLUTE_PATH+"//"+arguments.output, "w")
     
-    descomprimido = descompressao(entrada)
-    for l in descomprimido: #grava no arquivo o resultado da descompressão
-            saida.write(l)
-    saida.close()
+    uncompressedFile = decompress(input)
+    for l in uncompressedFile:
+            output.write(l)
+    output.close()
            
